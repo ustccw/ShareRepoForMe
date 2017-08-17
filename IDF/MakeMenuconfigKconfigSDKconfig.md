@@ -3,19 +3,19 @@
 ### 关于 IDF 下 make menuconfig 以及 Kconfig, Kconfig.projbuild, sdkconfig, sdkconfig.defaults, sdkconfig.old 等文件的一些理解和使用。  
 
 在 IDF 下的 demo，如果你导出了 IDF_PATH 后输入 make menuconfig 那么会出现很多配置选项，这时候你会问：
-
-**1. 为什么会出现这个蓝淡灰色的界面呢？**	// keyword: make menuconfig, GNU, Makefile
-**2. 这个界面的作用是什么呢？**			// keyword: 配置, 参数
-**3. 界面中的这些选项是如何来的呢？**		// keyword: Kconfig, Kconfig.projbuild
-**4. 这些选项和 demo 是如何相互工作的呢？**	// keyword: sdkconfig, sdkconfig.defaults, sdkconfig.old, Kconfig, Kconfig.projbuild
-**5. 我们该怎么用它呢？**				// keyword: Kconfig, Kconfig.projbuild, sdkconfig, sdkconfig.defaults, kconfig语法
-**6. Kconfig 语法**						// keyword: 自定义配置，自定义参数
+  
+**1. 为什么会出现这个蓝淡灰色的界面呢？**	// keyword: make menuconfig, GNU, Makefile  
+**2. 这个界面的作用是什么呢？**			// keyword: 配置, 参数  
+**3. 界面中的这些选项是如何来的呢？**		// keyword: Kconfig, Kconfig.projbuild  
+**4. 这些选项和 demo 是如何相互工作的呢？**	// keyword: sdkconfig, sdkconfig.defaults, sdkconfig.old, Kconfig, Kconfig.projbuild  
+**5. 我们该怎么用它呢？**				// keyword: Kconfig, Kconfig.projbuild, sdkconfig, sdkconfig.defaults, kconfig语法  
+**6. Kconfig 语法**						// keyword: 自定义配置，自定义参数  
 
 
 我们依次根据这些问题来谈谈 make menuconfig 以及这些配置文件。
 
 ### 1. make menuconfig 之后为什么会出现这个蓝淡灰色的界面呢？	  
-// **keyword: make menuconfig, GNU, Makefile**
+// **keyword: make menuconfig, GNU, Makefile**  
 make menuconfig 并不是 IDF 独有的，在很多配置内核选项的地方都有设计这种做法。IDF 基于此种想法，沿袭了该种设计。下面说说出现这个界面出现的过程。  
 
 在输入 make menuconfig 之后，GNU make 会找到当前目录的 Makefile 文件并执行执行命令。在该文件中，包含 include $(IDF_PATH)/make/project.mk ,于是 GNU 编译器去到 $(IDF_PATH)/make/project.mk 文件中执行命令，该 project.mk 文件中，又包含有 include $(IDF_PATH)/make/project_config.mk,于是 GNU 编译器又去到 $(IDF_PATH)/make/project_config.mk 文件中执行命令。  
@@ -26,7 +26,7 @@ project_config.mk 中做了以下主要事情：
 - c) 指定 make menuconfig 运行方式: `menuconfig: $(KCONFIG_TOOL_DIR)/mconf` 。由于在 b）中，我们已经编译生成用于界面渲染的 mconf 可执行文件，所以在用户输入 `make menuconfig`之后，GNU会调用 mconf ,用户即可看到蓝淡灰色的界面。
 
 ### 2. 这个界面的作用是什么呢？	
-// **keyword: 配置, 参数**
+// **keyword: 配置, 参数**  
 这部分很容易理解。这个界面是用来配置 ESP32 运行环境的一些参数。部分配置如下:
 - Bootloader config -> Bootloader log verbosity 用来配置 cpu 启动和 bootloader 启动后的一些早期的LOG。这些早期LOG分别调用 ESP_EARLY_LOGX 系列接口来不同显示。// PS: 这个log显示很好玩，有红黄绿白各种颜色的。
 - Security features // 请勿修改。这是决定是否开启 secureboot 和 flash 加密的配置。
@@ -45,7 +45,7 @@ project_config.mk 中做了以下主要事情：
 - Component config -> OpenSSL //  SSL/TLS 如果使用 ssl lib,可通过此选项配置 ssl 工作方式，如开启调试[打印更多log]等。
 
 ### 3. 【原理】界面中的这些选项是如何来的呢？	
-// **keyword: Kconfig, Kconfig.projbuild**
+// **keyword: Kconfig, Kconfig.projbuild**  
 在 esp-idf 根目录下，有 Kconfig 文件，该文件是界面中所有选项的入口地方。Kconfig 文件被导出到环境变量，在 make menuconfig 执行中，mconf 会使用该 Kconfig 作为其参数[这一句是我大概理解的，我不是很确定]。  
 
 在该 Kconfig 文件中，描述了 make menuconfig 中一系列选项的布局过程。  
@@ -70,7 +70,7 @@ project_config.mk 中做了以下主要事情：
 // 这步将调用 components 下所有的 Kconfig 文件！这些kconfig文件配置将作为 Component config 的子选项。如: esp-idf/components/freertos/Kconfig 配置文件，于是有了 Component config -> FreeRTOS 选项，components 下每个 Kconfig 文件都将作为 Component config 的一个子选项，显示在 make menuconfig 中。
 
 ### [重要]4. 这些选项和 demo 是如何相互工作的呢？
-// **keyword: sdkconfig, sdkconfig.defaults, sdkconfig.old, Kconfig, Kconfig.projbuild**
+// **keyword: sdkconfig, sdkconfig.defaults, sdkconfig.old, Kconfig, Kconfig.projbuild**  
 这些选项配置好之后，最终都会将这些配置保存在生成的 sdkconfig 文件中。sdkconfig 文件中每一条配置你可以简单理解为宏定义，sdkconfig 文件是直接提供给 demo 使用的。demo 编译时候，根据 sdkconfig 中的配置来编译每个 component 以及相关设置。
 - a) Kconfig 和 Kconfig.projbuild 上一节说过，是生成 sdkconfig 文件的源头。
 - b) 如果你没有 sdkconfig 文件，在运行 make 时，会自动弹出 make menuconfig 菜单，然后生成 sdkconfig 文件。
@@ -87,7 +87,7 @@ project_config.mk 中做了以下主要事情：
 **sdkconfig 文件是绝对的老大。Kconfig+Kconfig.projbuild 是生成 sdkconfig 的主要源头，sdkconfig.defaults 是配置 Kconfig+Kconfig.projbuild 中 默认选择的选项和 depends on 字段的选项。sdkconfig.old 是 sdkconfig 的备份。只要有 sdkconfig ，sdkconfig.defaults 将不起作用！**
 
 ### 5. 我们该怎么用它呢？				
-// **keyword: Kconfig, Kconfig.projbuild, sdkconfig, sdkconfig.defaults**
+// **keyword: Kconfig, Kconfig.projbuild, sdkconfig, sdkconfig.defaults**  
 如果你理解了上面四节，那么也是很容易去使用它。
 - a)如果你只是很简单的为自己的 demo 加一点配置，当然这些配置也可以放在 demo 的代码中。我们可以在 demo 的 main/ 目录下，增加一个 Kconfig.projbuild 文件，在该文件中增加一些配置，关于配置的语法，请参考第六节 Kconfig 语法。即可在 make menuconfig 主选项中看到自己增加的配置
 - b)如果你想在 component 下增加一个组件，并为这个组件增加一些配置。那么你有两种选择：
@@ -96,7 +96,7 @@ project_config.mk 中做了以下主要事情：
 - c) 如果你想条件显示你的组件配置选项，或为你的组件配置设置默认值。请在组件下的Kconfig/Kconfig.projbuild 中使用 depends on 关键字，并结合第四节 sdkconfig.defaults 的用法来配置你的 demo. [参见 aws_iot组件部署]
 
 ### 6. Kconfig 语法	
-// **keyword: 自定义配置，自定义参数**
+// **keyword: 自定义配置，自定义参数**  
 IDF 下的 Kconfig 语法和 linux 下的 Kconfig 语法几乎相同。主要有下面几类:
 
 #### 6.1  用户输入配置【如配置WiFi SSID/WiFi passwd】
@@ -115,7 +115,7 @@ IDF 下的 Kconfig 语法和 linux 下的 Kconfig 语法几乎相同。主要有
 	endmenu
 ```
 ----------
-**说明:**
+**说明:**  
 上面关键字有 menu,endmenu,config,string, default, help.
 `menu "WiFi Settings"`	  
 // 给用户显示看到的选项介绍
@@ -145,7 +145,7 @@ config OPTIMIZATION_LEVEL_RELEASE
 endchoice
 ```
 ----------
-**说明:**
+**说明:**  
 上面关键字有 choice, endchoice,prompt, default,help,config,bool  
 
 `choice OPTIMIZATION_LEVEL`	
