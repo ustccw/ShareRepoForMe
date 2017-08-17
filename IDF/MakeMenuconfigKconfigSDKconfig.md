@@ -114,9 +114,11 @@ IDF 下的 Kconfig 语法和 linux 下的 Kconfig 语法几乎相同。主要有
 			helps passwd
 	endmenu
 ```
-----------
-**说明:**  
+  
+----------  
 
+**说明:**  
+  
 **上面关键字有 menu,endmenu,config,string, default, help**  
   
 `menu "WiFi Settings"`	  
