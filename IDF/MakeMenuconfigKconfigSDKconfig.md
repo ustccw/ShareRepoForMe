@@ -2,8 +2,8 @@
 
 ### 关于 IDF 下 make menuconfig 以及 Kconfig, Kconfig.projbuild, sdkconfig, sdkconfig.defaults, sdkconfig.old 等文件的一些理解和使用。  
 
-在 IDF 下的 demo，如果你导出了 IDF_PATH 后输入 make menuconfig 那么会出现很多配置选项，这时候你会问：
-  
+在 IDF 下的 demo，如果你导出了 IDF_PATH 后输入 make menuconfig 那么会出现很多配置选项，这时候你会问：  
+    
 **1. 为什么会出现这个蓝淡灰色的界面呢？**	// keyword: make menuconfig, GNU, Makefile  
 **2. 这个界面的作用是什么呢？**			// keyword: 配置, 参数  
 **3. 界面中的这些选项是如何来的呢？**		// keyword: Kconfig, Kconfig.projbuild  
@@ -44,7 +44,7 @@ project_config.mk 中做了以下主要事情：
 - Component config -> mbedTLS //  SSL/TLS 如果使用 mbedTLS lib,可通过此选项配置 mbedTLS 工作方式，如开启调试[打印更多log]等。
 - Component config -> OpenSSL //  SSL/TLS 如果使用 ssl lib,可通过此选项配置 ssl 工作方式，如开启调试[打印更多log]等。
 
-### 3. 【原理】界面中的这些选项是如何来的呢？	
+### 3. 【原理】界面中的这些选项是如何来的呢？	 
 // **keyword: Kconfig, Kconfig.projbuild**  
 在 esp-idf 根目录下，有 Kconfig 文件，该文件是界面中所有选项的入口地方。Kconfig 文件被导出到环境变量，在 make menuconfig 执行中，mconf 会使用该 Kconfig 作为其参数[这一句是我大概理解的，我不是很确定]。  
 
@@ -69,7 +69,7 @@ project_config.mk 中做了以下主要事情：
 `source "$COMPONENT_KCONFIGS"`	
 // 这步将调用 components 下所有的 Kconfig 文件！这些kconfig文件配置将作为 Component config 的子选项。如: esp-idf/components/freertos/Kconfig 配置文件，于是有了 Component config -> FreeRTOS 选项，components 下每个 Kconfig 文件都将作为 Component config 的一个子选项，显示在 make menuconfig 中。
 
-### [重要]4. 这些选项和 demo 是如何相互工作的呢？
+### [重要]4. 这些选项和 demo 是如何相互工作的呢？  
 // **keyword: sdkconfig, sdkconfig.defaults, sdkconfig.old, Kconfig, Kconfig.projbuild**  
 这些选项配置好之后，最终都会将这些配置保存在生成的 sdkconfig 文件中。sdkconfig 文件中每一条配置你可以简单理解为宏定义，sdkconfig 文件是直接提供给 demo 使用的。demo 编译时候，根据 sdkconfig 中的配置来编译每个 component 以及相关设置。
 - a) Kconfig 和 Kconfig.projbuild 上一节说过，是生成 sdkconfig 文件的源头。
@@ -83,10 +83,10 @@ project_config.mk 中做了以下主要事情：
 - g) sdkconfig.old 是 sdkconfig 的备份文件，在每一次使用 make menuconfig 修改配置后，那么上一次的配置将保存在 sdkconfig.old 中，其他的用途暂且不知。
 - h) 生成的 sdkconfig 你可以理解为一种宏定义的集合，在编译过程过程中，会根据这些宏或代替某些字段或条件编译某些component等。
 
-#### 小结： 
+#### 小结：   
 **sdkconfig 文件是绝对的老大。Kconfig+Kconfig.projbuild 是生成 sdkconfig 的主要源头，sdkconfig.defaults 是配置 Kconfig+Kconfig.projbuild 中 默认选择的选项和 depends on 字段的选项。sdkconfig.old 是 sdkconfig 的备份。只要有 sdkconfig ，sdkconfig.defaults 将不起作用！**
 
-### 5. 我们该怎么用它呢？				
+### 5. 我们该怎么用它呢？  				  
 // **keyword: Kconfig, Kconfig.projbuild, sdkconfig, sdkconfig.defaults**  
 如果你理解了上面四节，那么也是很容易去使用它。
 - a)如果你只是很简单的为自己的 demo 加一点配置，当然这些配置也可以放在 demo 的代码中。我们可以在 demo 的 main/ 目录下，增加一个 Kconfig.projbuild 文件，在该文件中增加一些配置，关于配置的语法，请参考第六节 Kconfig 语法。即可在 make menuconfig 主选项中看到自己增加的配置
@@ -97,9 +97,9 @@ project_config.mk 中做了以下主要事情：
 
 ### 6. Kconfig 语法	
 // **keyword: 自定义配置，自定义参数**  
-IDF 下的 Kconfig 语法和 linux 下的 Kconfig 语法几乎相同。主要有下面几类:
+IDF 下的 Kconfig 语法和 linux 下的 Kconfig 语法几乎相同。主要有下面几类:  
 
-#### 6.1  用户输入配置【如配置WiFi SSID/WiFi passwd】
+#### 6.1  用户输入配置【如配置WiFi SSID/WiFi passwd】  
 ```
 	menu "WiFi Settings"
 	config WIFI_SSID
@@ -121,16 +121,26 @@ IDF 下的 Kconfig 语法和 linux 下的 Kconfig 语法几乎相同。主要有
   
 **上面关键字有 menu,endmenu,config,string, default, help**  
   
-`menu "WiFi Settings"`	  
+`menu "WiFi Settings"`  
+  
 // 给用户显示看到的选项介绍  
+  
 `config WIFI_SSID`	 
+  
 // 最终 WiFi ssid 是由此决定的。如目前这句，最终会生成 CONFIG_WIFI_SSID   
+  
 `string "wifi ssid"`	  
+  
 // 给用户显示看到  
+  
 `default "myssid"`	  
+  
 // 设置默认的ssid ，以上你可以简单理解为 #define CONFIG_WIFI_SSID myssid 这句宏定义  
+  
 `help` 	
+  
 // 下面是对此选项的一些说明，相当于代码中的注释。  
+
 ----------  
 
 #### 6.2 用户选择配置
