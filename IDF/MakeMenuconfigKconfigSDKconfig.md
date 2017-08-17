@@ -4,12 +4,12 @@
 
 在 IDF 下的 demo，如果你导出了 IDF_PATH 后输入 make menuconfig 那么会出现很多配置选项，这时候你会问：  
     
-**1. 为什么会出现这个蓝淡灰色的界面呢？**	// keyword: make menuconfig, GNU, Makefile  
-**2. 这个界面的作用是什么呢？**			// keyword: 配置, 参数  
-**3. 界面中的这些选项是如何来的呢？**		// keyword: Kconfig, Kconfig.projbuild  
-**4. 这些选项和 demo 是如何相互工作的呢？**	// keyword: sdkconfig, sdkconfig.defaults, sdkconfig.old, Kconfig, Kconfig.projbuild  
-**5. 我们该怎么用它呢？**				// keyword: Kconfig, Kconfig.projbuild, sdkconfig, sdkconfig.defaults, kconfig语法  
-**6. Kconfig 语法**						// keyword: 自定义配置，自定义参数  
+**1.为什么会出现这个蓝淡灰色的界面呢？**	// keyword: make menuconfig, GNU, Makefile  
+**2.这个界面的作用是什么呢？**			// keyword: 配置, 参数  
+**3.界面中的这些选项是如何来的呢？**		// keyword: Kconfig, Kconfig.projbuild  
+**4.这些选项和 demo 是如何相互工作的呢？**	// keyword: sdkconfig, sdkconfig.defaults, sdkconfig.old, Kconfig, Kconfig.projbuild  
+**5.我们该怎么用它呢？**				// keyword: Kconfig, Kconfig.projbuild, sdkconfig, sdkconfig.defaults, kconfig语法  
+**6.Kconfig 语法？**						// keyword: 自定义配置，自定义参数  
 
 
 我们依次根据这些问题来谈谈 make menuconfig 以及这些配置文件。
@@ -143,7 +143,7 @@ IDF 下的 Kconfig 语法和 linux 下的 Kconfig 语法几乎相同。主要有
 
 ----------  
 
-#### 6.2 用户选择配置
+#### 6.2 用户选择配置【如选择LOG等级】  
 ----------
 ```
 choice OPTIMIZATION_LEVEL
