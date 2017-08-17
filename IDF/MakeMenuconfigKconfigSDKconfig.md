@@ -118,18 +118,18 @@ IDF 下的 Kconfig 语法和 linux 下的 Kconfig 语法几乎相同。主要有
 **说明:**  
 
 **上面关键字有 menu,endmenu,config,string, default, help**  
-
+  
 `menu "WiFi Settings"`	  
-// 给用户显示看到的选项介绍
+// 给用户显示看到的选项介绍  
 `config WIFI_SSID`	 
-// 最终 WiFi ssid 是由此决定的。如目前这句，最终会生成 CONFIG_WIFI_SSID 
-`string "wifi ssid"`	
-// 给用户显示看到
-`default "myssid"`	
-// 设置默认的ssid ，以上你可以简单理解为 #define CONFIG_WIFI_SSID myssid 这句宏定义
+// 最终 WiFi ssid 是由此决定的。如目前这句，最终会生成 CONFIG_WIFI_SSID   
+`string "wifi ssid"`	  
+// 给用户显示看到  
+`default "myssid"`	  
+// 设置默认的ssid ，以上你可以简单理解为 #define CONFIG_WIFI_SSID myssid 这句宏定义  
 `help` 	
-// 下面是对此选项的一些说明，相当于代码中的注释。
-----------
+// 下面是对此选项的一些说明，相当于代码中的注释。  
+----------  
 
 #### 6.2 用户选择配置
 ----------
