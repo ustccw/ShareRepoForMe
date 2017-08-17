@@ -1,0 +1,20 @@
+echo kill task start...
+echo $0
+echo $1
+threadpid=1
+while [ $threadpid -ge 1 ]
+do
+threadpid=`netstat -anp|grep $1 | sed -n '1p' | awk '{printf $7}'|cut -d/ -f1`
+echo $threadpid
+sudo kill -9 $threadpid
+done
+threadpid=1
+while [ $threadpid -ge 1 ]
+do
+threadpid=`ps -aux | grep $1 | grep -v grep | sed -n '1p' | awk '{printf $2}' | cut -d/ -f1`
+echo $threadpid
+sudo kill -9 $threadpid
+done
+
+echo kill task end...
+
