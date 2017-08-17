@@ -116,7 +116,9 @@ IDF 下的 Kconfig 语法和 linux 下的 Kconfig 语法几乎相同。主要有
 ```
 ----------
 **说明:**  
-上面关键字有 menu,endmenu,config,string, default, help.
+
+**上面关键字有 menu,endmenu,config,string, default, help**  
+
 `menu "WiFi Settings"`	  
 // 给用户显示看到的选项介绍
 `config WIFI_SSID`	 
@@ -146,20 +148,21 @@ endchoice
 ```
 ----------
 **说明:**  
-上面关键字有 choice, endchoice,prompt, default,help,config,bool  
 
-`choice OPTIMIZATION_LEVEL`	
-// choice 为关键字，OPTIMIZATION_LEVEL 可用来区分不同的 choice
-`prompt "Optimization level"`	
-// 给用户看到的选项介绍
-`default OPTIMIZATION_LEVEL_DEBUG` 
-// 选定默认的一个选择，必须是接下来 config 中一个
-`help` 
-// help为关键字，接下来是对此选项的一些说明，相当于代码中的注释。
-`config OPTIMIZATION_LEVEL_DEBUG` 
-// 用户如果选择此选项，则在生成的 sdkconfig 就成了宏 CONFIG_OPTIMIZATION_LEVEL_DEBUG
-`bool "Debug"`	
-// bool 为关键字，"Debug 是显示给用户看的"，如果用户选择此选项，那么就意味这 #define CONFIG_OPTIMIZATION_LEVEL_DEBUG true,在 sdkconfig 中显示为 CONFIG_OPTIMIZATION_LEVEL_DEBUG=y
+**上面关键字有 choice, endchoice,prompt, default,help,config,bool**  
+
+`choice OPTIMIZATION_LEVEL`	  
+// choice 为关键字，OPTIMIZATION_LEVEL 可用来区分不同的 choice  
+`prompt "Optimization level"`	  
+// 给用户看到的选项介绍  
+`default OPTIMIZATION_LEVEL_DEBUG`   
+// 选定默认的一个选择，必须是接下来 config 中一个  
+`help`   
+// help为关键字，接下来是对此选项的一些说明，相当于代码中的注释。  
+`config OPTIMIZATION_LEVEL_DEBUG`   
+// 用户如果选择此选项，则在生成的 sdkconfig 就成了宏 CONFIG_OPTIMIZATION_LEVEL_DEBUG  
+`bool "Debug"`	  
+// bool 为关键字，"Debug 是显示给用户看的"，如果用户选择此选项，那么就意味这 #define CONFIG_OPTIMIZATION_LEVEL_DEBUG true,在 sdkconfig 中显示为 CONFIG_OPTIMIZATION_LEVEL_DEBUG=y  
 
 
 #### 6.3 其他高级用法可根据关键字 source / depends on/tristate/ if endif/comment/select等来自行设置和测试。
