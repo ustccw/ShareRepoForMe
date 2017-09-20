@@ -1,0 +1,2 @@
+nautilus ~/esp/esp-idf/
+// 以窗口模式打开文件夹
